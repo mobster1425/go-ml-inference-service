@@ -38,6 +38,7 @@ FEATURE_ORDER = NUMERIC_FEATURES + [
     for feature, categories in CATEGORICAL_FEATURES.items()
     for category in categories
 ]
+DROP_COLUMNS = ["id", "CustomerId", "Surname"]
 
 
 def preprocess_frame(df: pd.DataFrame, means: dict[str, float], stds: dict[str, float]) -> np.ndarray:
@@ -54,6 +55,7 @@ def preprocess_frame(df: pd.DataFrame, means: dict[str, float], stds: dict[str, 
 
 
 def write_results(
+    dataset_source: str,
     train_rows: int,
     validation_rows: int,
     churn_rate: float,
@@ -67,6 +69,7 @@ This project trains a logistic regression churn model in Python, exports it as a
 
 ## Dataset
 
+- Dataset source: {dataset_source}
 - Train rows: {train_rows}
 - Validation rows: {validation_rows}
 - Features: {len(FEATURE_ORDER)}
@@ -112,7 +115,9 @@ def main() -> None:
     if not TRAIN_PATH.exists():
         raise FileNotFoundError(f"Missing training data: {TRAIN_PATH}. Run training/generate_data.py first.")
 
-    df = pd.read_csv(TRAIN_PATH)
+    raw_df = pd.read_csv(TRAIN_PATH)
+    dataset_source = detect_dataset_source(raw_df)
+    df = raw_df.drop(columns=[column for column in DROP_COLUMNS if column in raw_df.columns])
     missing = [column for column in NUMERIC_FEATURES + list(CATEGORICAL_FEATURES) + [TARGET] if column not in df.columns]
     if missing:
         raise ValueError(f"Training data is missing required columns: {missing}")
@@ -149,6 +154,7 @@ def main() -> None:
     artifact = {
         "model_name": "bank_churn_logistic_regression",
         "model_version": "1.0.0",
+        "dataset_source": dataset_source,
         "created_at": datetime.now(timezone.utc).isoformat(),
         "target": TARGET,
         "threshold": 0.5,
@@ -166,12 +172,18 @@ def main() -> None:
 
     ARTIFACT_PATH.parent.mkdir(parents=True, exist_ok=True)
     ARTIFACT_PATH.write_text(json.dumps(artifact, indent=2), encoding="utf-8")
-    write_results(len(train_df), len(validation_df), float(df[TARGET].mean()), metrics)
+    write_results(dataset_source, len(train_df), len(validation_df), float(df[TARGET].mean()), metrics)
 
     print(f"Wrote model artifact to {ARTIFACT_PATH}")
     print(f"Wrote results to {RESULTS_PATH}")
     for name, score in metrics.items():
         print(f"{name}: {score:.4f}")
+
+
+def detect_dataset_source(df: pd.DataFrame) -> str:
+    if {"id", "Surname"}.issubset(df.columns) and len(df) > 20_000:
+        return "real_kaggle_bank_churn"
+    return "synthetic_bank_churn"
 
 
 if __name__ == "__main__":

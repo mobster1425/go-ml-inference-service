@@ -16,6 +16,7 @@ type Preprocessing struct {
 type ModelArtifact struct {
 	ModelName           string              `json:"model_name"`
 	ModelVersion        string              `json:"model_version"`
+	DatasetSource       string              `json:"dataset_source"`
 	CreatedAt           string              `json:"created_at"`
 	Target              string              `json:"target"`
 	Threshold           float64             `json:"threshold"`

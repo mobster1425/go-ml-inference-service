@@ -17,8 +17,10 @@ DATA_DIR = ROOT / "training" / "data"
 TRAIN_PATH = DATA_DIR / "train.csv"
 TEST_PATH = DATA_DIR / "test.csv"
 
-COLUMNS = [
+TRAIN_COLUMNS = [
+    "id",
     "CustomerId",
+    "Surname",
     "CreditScore",
     "Geography",
     "Gender",
@@ -31,6 +33,19 @@ COLUMNS = [
     "EstimatedSalary",
     "Exited",
 ]
+TEST_COLUMNS = [column for column in TRAIN_COLUMNS if column != "Exited"]
+SURNAMES = [
+    "Smith",
+    "Johnson",
+    "Williams",
+    "Brown",
+    "Jones",
+    "Miller",
+    "Davis",
+    "Garcia",
+    "Wilson",
+    "Taylor",
+]
 
 
 def sigmoid(values: np.ndarray) -> np.ndarray:
@@ -39,7 +54,9 @@ def sigmoid(values: np.ndarray) -> np.ndarray:
 
 def generate_customers(n_rows: int, rng: np.random.Generator, start_id: int) -> pd.DataFrame:
     """Create customers with realistic but intentionally synthetic churn signal."""
+    row_ids = np.arange(n_rows)
     customer_ids = np.arange(start_id, start_id + n_rows)
+    surnames = rng.choice(SURNAMES, size=n_rows)
     credit_score = np.clip(rng.normal(650, 95, n_rows).round(), 300, 900).astype(int)
     geography = rng.choice(["France", "Germany", "Spain"], size=n_rows, p=[0.52, 0.25, 0.23])
     gender = rng.choice(["Female", "Male"], size=n_rows, p=[0.46, 0.54])
@@ -76,7 +93,9 @@ def generate_customers(n_rows: int, rng: np.random.Generator, start_id: int) -> 
 
     data = pd.DataFrame(
         {
+            "id": row_ids,
             "CustomerId": customer_ids,
+            "Surname": surnames,
             "CreditScore": credit_score,
             "Geography": geography,
             "Gender": gender,
@@ -90,21 +109,45 @@ def generate_customers(n_rows: int, rng: np.random.Generator, start_id: int) -> 
             "Exited": exited,
         }
     )
-    return data[COLUMNS]
+    return data[TRAIN_COLUMNS]
+
+
+def report_existing_data() -> bool:
+    if not TRAIN_PATH.exists():
+        return False
+
+    train = pd.read_csv(TRAIN_PATH)
+    print("Existing training data found. Skipping synthetic data generation.")
+    print(f"Existing train.csv shape: {train.shape}")
+    if "Exited" in train.columns:
+        print(f"Existing train.csv churn rate: {train['Exited'].mean():.4f}")
+    if TEST_PATH.exists():
+        test = pd.read_csv(TEST_PATH)
+        print(f"Existing test.csv shape: {test.shape}")
+    return True
 
 
 def main() -> None:
     DATA_DIR.mkdir(parents=True, exist_ok=True)
+    if report_existing_data():
+        return
+
     rng = np.random.default_rng(SEED)
 
     train = generate_customers(TRAIN_ROWS, rng, start_id=15_600_000)
     test = generate_customers(TEST_ROWS, rng, start_id=16_600_000)
 
     train.to_csv(TRAIN_PATH, index=False)
-    test.to_csv(TEST_PATH, index=False)
+    wrote_test = False
+    if TEST_PATH.exists():
+        print(f"Existing test.csv found. Leaving it unchanged at {TEST_PATH}.")
+    else:
+        test[TEST_COLUMNS].to_csv(TEST_PATH, index=False)
+        wrote_test = True
 
     print(f"Wrote {TRAIN_PATH} with shape {train.shape}; churn rate={train['Exited'].mean():.4f}")
-    print(f"Wrote {TEST_PATH} with shape {test.shape}; churn rate={test['Exited'].mean():.4f}")
+    if wrote_test:
+        print(f"Wrote {TEST_PATH} with shape {test[TEST_COLUMNS].shape}")
 
 
 if __name__ == "__main__":

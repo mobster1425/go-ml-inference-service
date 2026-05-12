@@ -24,6 +24,27 @@ func TestHealthReturnsOK(t *testing.T) {
 	}
 }
 
+func TestModelInfoIncludesDatasetSource(t *testing.T) {
+	server := testServer(t)
+	response := httptest.NewRecorder()
+	request := httptest.NewRequest(http.MethodGet, "/model-info", nil)
+
+	server.Routes().ServeHTTP(response, request)
+
+	if response.Code != http.StatusOK {
+		t.Fatalf("status=%d body=%s", response.Code, response.Body.String())
+	}
+	var result struct {
+		DatasetSource string `json:"dataset_source"`
+	}
+	if err := json.NewDecoder(response.Body).Decode(&result); err != nil {
+		t.Fatalf("decode response: %v", err)
+	}
+	if result.DatasetSource == "" {
+		t.Fatal("expected dataset_source in model-info response")
+	}
+}
+
 func TestPredictReturnsOKForValidInput(t *testing.T) {
 	server := testServer(t)
 	body := encodeJSON(t, validAPIInput())

@@ -55,11 +55,12 @@ func (s *Server) health(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) modelInfo(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, map[string]interface{}{
-		"model_name":    s.model.ModelName,
-		"model_version": s.model.ModelVersion,
-		"target":        s.model.Target,
-		"features":      s.model.FeatureOrder,
-		"metrics":       s.model.Metrics,
+		"model_name":     s.model.ModelName,
+		"model_version":  s.model.ModelVersion,
+		"dataset_source": s.model.DatasetSource,
+		"target":         s.model.Target,
+		"features":       s.model.FeatureOrder,
+		"metrics":        s.model.Metrics,
 	})
 }
 

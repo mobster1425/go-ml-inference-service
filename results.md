@@ -6,21 +6,22 @@ This project trains a logistic regression churn model in Python, exports it as a
 
 ## Dataset
 
-- Train rows: 16000
-- Validation rows: 4000
+- Dataset source: real_kaggle_bank_churn
+- Train rows: 132027
+- Validation rows: 33007
 - Features: 13
 - Target: Exited
-- Churn rate: 0.2255
+- Churn rate: 0.2116
 
 ## Model Performance
 
 | Metric | Score |
 |---|---:|
-| Accuracy | 0.7782 |
-| Precision | 0.5882 |
-| Recall | 0.0554 |
-| F1 | 0.1013 |
-| ROC-AUC | 0.6934 |
+| Accuracy | 0.8334 |
+| Precision | 0.6933 |
+| Recall | 0.3813 |
+| F1 | 0.4920 |
+| ROC-AUC | 0.8145 |
 
 ## Model Artifact
 

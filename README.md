@@ -12,6 +12,14 @@ Model work does not stop at training. A useful ML service needs a reproducible a
 Python training -> JSON model artifact -> Go inference service -> REST predictions
 ```
 
+## Dataset
+
+The training pipeline prefers real Bank Churn data whenever `training/data/train.csv` already exists. In that case, synthetic generation is skipped and the existing file is never overwritten.
+
+Synthetic data is generated only as a fallback when `training/data/train.csv` is missing. The exported JSON artifact includes `dataset_source`, so it is clear whether the current model was trained on real Kaggle-style Bank Churn data or the synthetic fallback dataset.
+
+Latest artifact dataset source: `real_kaggle_bank_churn`
+
 ## Tech Stack
 
 - Python

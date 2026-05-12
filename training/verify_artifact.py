@@ -63,9 +63,10 @@ def main() -> None:
         if not 0.0 <= probability <= 1.0:
             raise ValueError(f"Probability outside [0, 1]: {probability}")
         prediction = int(probability >= float(artifact["threshold"]))
+        actual = f" actual={int(row['Exited'])}" if "Exited" in row.index else ""
         print(
             f"CustomerId={int(row['CustomerId'])} probability={probability:.6f} "
-            f"prediction={prediction} actual={int(row['Exited'])}"
+            f"prediction={prediction}{actual}"
         )
 
     print("Artifact verification passed.")
