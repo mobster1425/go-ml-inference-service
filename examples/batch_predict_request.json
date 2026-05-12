@@ -1,0 +1,28 @@
+{
+  "records": [
+    {
+      "CreditScore": 650,
+      "Geography": "France",
+      "Gender": "Female",
+      "Age": 42,
+      "Tenure": 5,
+      "Balance": 125000,
+      "NumOfProducts": 2,
+      "HasCrCard": 1,
+      "IsActiveMember": 1,
+      "EstimatedSalary": 78000
+    },
+    {
+      "CreditScore": 515,
+      "Geography": "Germany",
+      "Gender": "Female",
+      "Age": 66,
+      "Tenure": 1,
+      "Balance": 210000,
+      "NumOfProducts": 1,
+      "HasCrCard": 1,
+      "IsActiveMember": 0,
+      "EstimatedSalary": 132000
+    }
+  ]
+}

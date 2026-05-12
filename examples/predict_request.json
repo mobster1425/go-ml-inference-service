@@ -1,0 +1,12 @@
+{
+  "CreditScore": 650,
+  "Geography": "France",
+  "Gender": "Female",
+  "Age": 42,
+  "Tenure": 5,
+  "Balance": 125000,
+  "NumOfProducts": 2,
+  "HasCrCard": 1,
+  "IsActiveMember": 1,
+  "EstimatedSalary": 78000
+}

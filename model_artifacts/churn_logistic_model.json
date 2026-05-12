@@ -1,0 +1,88 @@
+{
+  "model_name": "bank_churn_logistic_regression",
+  "model_version": "1.0.0",
+  "created_at": "2026-05-12T10:44:28.218821+00:00",
+  "target": "Exited",
+  "threshold": 0.5,
+  "numeric_features": [
+    "CreditScore",
+    "Age",
+    "Tenure",
+    "Balance",
+    "NumOfProducts",
+    "HasCrCard",
+    "IsActiveMember",
+    "EstimatedSalary"
+  ],
+  "categorical_features": {
+    "Geography": [
+      "France",
+      "Germany",
+      "Spain"
+    ],
+    "Gender": [
+      "Female",
+      "Male"
+    ]
+  },
+  "feature_order": [
+    "CreditScore",
+    "Age",
+    "Tenure",
+    "Balance",
+    "NumOfProducts",
+    "HasCrCard",
+    "IsActiveMember",
+    "EstimatedSalary",
+    "Geography_France",
+    "Geography_Germany",
+    "Geography_Spain",
+    "Gender_Female",
+    "Gender_Male"
+  ],
+  "preprocessing": {
+    "means": {
+      "CreditScore": 650.32275,
+      "Age": 41.050375,
+      "Tenure": 5.00525,
+      "Balance": 76036.2953175,
+      "NumOfProducts": 1.690375,
+      "HasCrCard": 0.714375,
+      "IsActiveMember": 0.513,
+      "EstimatedSalary": 85236.60777562499
+    },
+    "stds": {
+      "CreditScore": 94.80330140579215,
+      "Age": 10.807056137513756,
+      "Tenure": 3.1572689840272092,
+      "Balance": 66706.60099774477,
+      "NumOfProducts": 0.7857368257724184,
+      "HasCrCard": 0.4517115887100296,
+      "IsActiveMember": 0.49983097142930527,
+      "EstimatedSalary": 39201.60054840155
+    }
+  },
+  "coefficients": [
+    -0.18560215429750085,
+    0.4245614050269086,
+    -0.020955556518238976,
+    0.03682723474656945,
+    0.1073618780284289,
+    0.004157740213679641,
+    -0.37622445682227984,
+    0.0010246386400108761,
+    -0.3817473196837204,
+    -0.05682526763949988,
+    -0.2629091214712305,
+    -0.14800593498994963,
+    -0.5534757738045071
+  ],
+  "intercept": -0.7044809208783916,
+  "metrics": {
+    "accuracy": 0.77825,
+    "precision": 0.5882352941176471,
+    "recall": 0.05543237250554324,
+    "f1": 0.10131712259371833,
+    "roc_auc": 0.6934217626993454
+  }
+}
