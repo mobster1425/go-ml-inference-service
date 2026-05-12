@@ -54,6 +54,8 @@ go test ./...
 MODEL_PATH=../model_artifacts/churn_logistic_model.json go run ./cmd/server
 ```
 
+Latest verification: Go unit tests pass with `go test ./...`.
+
 From another terminal at the project root:
 
 ```bash
